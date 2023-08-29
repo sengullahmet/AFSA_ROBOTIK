@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_personel_kayit" Id="{21c95cd2-8e7e-4df7-893a-6ab4656b5188}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+
+perid:STRING;
+perisim:STRING;
+perSoyisim:STRING;
+
+perMesaiGun:BOOL;
+perMesaiSaat:BOOL;
+
+kaydet:BOOL;
+msgtype:MESSAGEBOXDIALOG_TYPES;
+messagetitle:STRING;
+messagetext:STRING;
+cikis3:BOOL;
+sayac:INT;
+i:INT := 1;
+sayac1:INT;
+j:INT;
+sayac2:INT;
+g:INT;
+
+
+
+dogru : BOOL;
+invisibleKayit : BOOL;
+
+
+
+
+
+personelisim:ARRAY[1..70] OF STRING;
+personelsoyisim:ARRAY[1..70] OF STRING;
+personelid:ARRAY[1..70] OF STRING;
+
+
+
+
+
+
+saydirici:R_TRIG ;
+
+
+
+temizle:BOOL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+END_VAR
+
+
+
+
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

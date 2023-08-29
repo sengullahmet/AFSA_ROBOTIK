@@ -1,0 +1,1111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{3939e62a-e95d-4b0e-8449-9e559d02c21b}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	
+
+
+
+isim:ARRAY[0..70] OF STRING;
+kullanici: ARRAY[0..70] OF STRING;
+sifreler: ARRAY[0..70] OF STRING;
+soyisim:ARRAY[0..70] OF STRING;
+gunler:ARRAY[1..7] OF BOOL;
+
+ad:STRING;
+soyad:STRING;
+kuladi:STRING;
+sifre:STRING;
+
+kaydet:BOOL;
+
+
+
+
+
+
+
+uyelik:BOOL;
+uyelik1:BOOL;
+sayici:INT;
+
+
+
+giris:BOOL;
+
+
+
+
+yenikul:STRING;
+yenisifre:STRING;
+
+
+
+
+
+msgtype:MESSAGEBOXDIALOG_TYPES;
+msgtitle:STRING;
+msgtxt:STRING;
+
+
+
+i: INT;
+j:INT;
+	
+	cikis: BOOL;
+	
+
+	
+
+	saydir: R_TRIG;
+	cikis2: BOOL;
+	sayici1: INT;
+	kaydet2: BOOL;
+	sayici2: INT;
+	g: INT;
+	sayici3: INT;
+	h: INT;
+	n: INT;
+	giris1: BOOL;
+	
+	mesai_saat_saydirici: R_TRIG;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+msgtitle:='İşlem Durumu ';
+msgtxt:='Kayıt İşlemi Başarılı..';
+
+
+GVL_personel_kayit.messagetext:='Kayıt İşlemi Başarılı.. Mesai Ücreti Hesaplamak Mesai Günü Seç  Butonuna Basınız.';
+GVL_personel_kayit.messagetitle:='Kayıt İşlemi Durumu';
+
+
+
+
+
+
+Giris_Panel();
+uyelik_panel();
+Kayit_Sayfa();
+mesai_gun();
+mesai_saat();
+Hesap_Panel();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="Giris_Panel" Id="{b3dd225c-0cda-409c-88cf-e22b0339c929}">
+      <Implementation>
+        <ST><![CDATA[
+giris1:=FALSE;
+
+IF GVL_personel_kayit.perMesaiGun THEN
+	GVL_personel_kayit.dogru:=TRUE;
+	
+END_IF
+
+
+IF giris=TRUE THEN
+	
+FOR n:=1 TO 70 BY 1 DO
+	
+  IF kullanici[n]=kuladi AND sifreler[n]=sifre AND NOT GVL_personel_kayit.dogru THEN
+	  
+ 
+	  VisuElems.CurrentVisu := 'Kayit_Sayfa';
+	  
+	  
+	  
+	 
+  END_IF
+
+  	
+END_FOR
+
+	
+END_IF
+
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="Hesap_Panel" Id="{e55e8e4c-b275-4488-a58f-320fa1569264}">
+      <Implementation>
+        <ST><![CDATA[
+GVL_mesai_saat.mesaiucret:=50;
+GVL_hesapSayfa.saydir1(IN:=GVL_hesapSayfa.start , PT:=T#10S , Q=>GVL_hesapSayfa.cikis , ET=>GVL_hesapSayfa.gecensure );
+
+GVL_hesapSayfa.start:=TRUE;
+
+
+
+IF GVL_hesapSayfa.cikis=TRUE THEN
+	
+ IF 
+	 GVL_mesai_gun.pazartesi=TRUE  OR  GVL_mesai_gun.sali=TRUE OR  GVL_mesai_gun.carsamba=TRUE OR  GVL_mesai_gun.persembe=TRUE OR  GVL_mesai_gun.cuma=TRUE THEN
+	
+	
+(*   IF GVL_mesai_saat.baslangicsaat < GVL_mesai_saat.bitissaat  THEN
+    	GVL_hesapSayfa.hesaplama:= GVL_mesai_saat.bitissaat-GVL_mesai_saat.baslangicsaat;
+		ELSE			
+		GVL_hesapSayfa.hesaplama:=GVL_mesai_saat.baslangicsaat-GVL_mesai_saat.bitisdakika;
+		
+ 
+ 
+END_IF
+ *)
+	
+	
+	
+ 
+ END_IF
+ 
+ 
+ 
+ 
+
+ 
+(*  IF GVL_mesai_gun.cumartesi OR GVL_mesai_gun.pazar THEN
+	 	
+   	 
+ GVL_hesapSayfa.hesaplama:= GVL_mesai_saat.bitisdakika-GVL_mesai_saat.baslangicdakika;
+ 
+ 
+ END_IF
+ *)
+ 
+ 
+ 
+
+
+
+	
+END_IF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="Kayit_sayfa" Id="{4a3b87f7-ac59-4d93-8283-157cde9e917a}">
+      <Implementation>
+        <ST><![CDATA[
+
+GVL_personel_kayit.saydirici(CLK:=GVL_personel_kayit.kaydet , Q=>GVL_personel_kayit.cikis3 );
+
+IF GVL_personel_kayit.kaydet THEN
+	GVL_personel_kayit.invisibleKayit:=TRUE;
+END_IF
+
+IF VisuElems.CurrentVisu='mesaigunleri_sayfa'THEN
+	GVL_personel_kayit.invisibleKayit:=FALSE;
+END_IF
+
+
+IF GVL_personel_kayit.kaydet=TRUE THEN
+	
+IF GVL_personel_kayit.cikis3=TRUE THEN
+ 
+GVL_personel_kayit.sayac:=GVL_personel_kayit.sayac +1;
+
+END_IF
+
+
+
+FOR GVL_personel_kayit.i:=1 TO 70 BY 1 DO
+	
+IF GVL_personel_kayit.personelisim[GVL_personel_kayit.i] ='' THEN
+	GVL_personel_kayit.personelisim[GVL_personel_kayit.i]:=GVL_personel_kayit.perisim;
+		
+ELSE
+	GVL_personel_kayit.personelisim[GVL_personel_kayit.sayac]:=GVL_personel_kayit.perisim;
+	
+END_IF
+
+EXIT;
+END_FOR
+
+
+
+
+
+
+IF GVL_personel_kayit.cikis3=TRUE THEN
+	
+	GVL_personel_kayit.sayac1:=GVL_personel_kayit.sayac1+1;		
+END_IF
+
+FOR GVL_personel_kayit.j:=1 TO 70 BY  1 DO
+	
+IF GVL_personel_kayit.personelsoyisim[GVL_personel_kayit.j]='' THEN
+	GVL_personel_kayit.personelsoyisim[GVL_personel_kayit.j]:=GVL_personel_kayit.perSoyisim;
+	ELSE
+		GVL_personel_kayit.personelsoyisim[GVL_personel_kayit.sayac]:=GVL_personel_kayit.perSoyisim;
+	
+END_IF
+
+EXIT;
+
+END_FOR
+
+
+
+IF GVL_personel_kayit.cikis3=TRUE THEN
+	GVL_personel_kayit.sayac2:=GVL_personel_kayit.sayac2 +1;
+	
+END_IF
+
+FOR GVL_personel_kayit.g:=1 TO 70 BY 1 DO
+	
+	IF GVL_personel_kayit.personelid[GVL_personel_kayit.g]='' THEN
+		GVL_personel_kayit.personelid[GVL_personel_kayit.g]:=GVL_personel_kayit.perid;
+		ELSE
+		GVL_personel_kayit.personelid[GVL_personel_kayit.sayac2]:=GVL_personel_kayit.perid;	
+		
+	END_IF
+	EXIT;
+	
+END_FOR
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+END_IF
+
+
+
+
+IF GVL_personel_kayit.temizle=TRUE THEN
+	GVL_personel_kayit.perisim:='';
+	GVL_personel_kayit.perSoyisim:='';
+	GVL_personel_kayit.perid:='';
+	
+	
+	
+	
+
+
+END_IF
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="mesai_gun" Id="{040defbb-62af-418d-b4ab-2dc951da809f}">
+      <Implementation>
+        <ST><![CDATA[
+
+
+
+
+IF GVL_mesai_gun.pazartesi=TRUE THEN
+	
+	
+GVL_mesai_gun.sali:=FALSE;
+GVL_mesai_gun.carsamba:=FALSE;
+GVL_mesai_gun.persembe:=FALSE;
+GVL_mesai_gun.cuma:=FALSE;
+GVL_mesai_gun.cumartesi:=FALSE;
+GVL_mesai_gun.pazar:=FALSE;
+
+
+END_IF
+
+
+
+
+
+
+IF GVL_mesai_gun.sali=TRUE THEN
+	
+	
+GVL_mesai_gun.pazartesi:=FALSE;
+GVL_mesai_gun.carsamba:=FALSE;
+GVL_mesai_gun.persembe:=FALSE;
+GVL_mesai_gun.cuma:=FALSE;
+GVL_mesai_gun.cumartesi:=FALSE;
+GVL_mesai_gun.pazar:=FALSE;
+
+
+END_IF
+
+
+
+
+
+IF GVL_mesai_gun.carsamba=TRUE THEN
+	
+	
+GVL_mesai_gun.pazartesi:=FALSE;
+GVL_mesai_gun.sali:=FALSE;
+GVL_mesai_gun.persembe:=FALSE;
+GVL_mesai_gun.cuma:=FALSE;
+GVL_mesai_gun.cumartesi:=FALSE;
+GVL_mesai_gun.pazar:=FALSE;
+
+
+END_IF
+
+
+
+
+IF GVL_mesai_gun.persembe=TRUE THEN
+	
+	
+GVL_mesai_gun.pazartesi:=FALSE;
+GVL_mesai_gun.sali:=FALSE;
+GVL_mesai_gun.carsamba:=FALSE;
+GVL_mesai_gun.cuma:=FALSE;
+GVL_mesai_gun.cumartesi:=FALSE;
+GVL_mesai_gun.pazar:=FALSE;
+
+
+END_IF
+
+
+
+
+
+IF GVL_mesai_gun.cuma=TRUE THEN
+	
+	
+GVL_mesai_gun.pazartesi:=FALSE;
+GVL_mesai_gun.sali:=FALSE;
+GVL_mesai_gun.carsamba:=FALSE;
+GVL_mesai_gun.persembe:=FALSE;
+GVL_mesai_gun.cumartesi:=FALSE;
+GVL_mesai_gun.pazar:=FALSE;
+
+
+END_IF
+
+
+
+
+
+
+IF GVL_mesai_gun.cumartesi=TRUE THEN
+	
+	
+GVL_mesai_gun.pazartesi:=FALSE;
+GVL_mesai_gun.sali:=FALSE;
+GVL_mesai_gun.carsamba:=FALSE;
+GVL_mesai_gun.persembe:=FALSE;
+GVL_mesai_gun.cuma:=FALSE;
+GVL_mesai_gun.pazar:=FALSE;
+
+
+END_IF
+IF GVL_mesai_gun.pazar=TRUE THEN
+	
+	
+GVL_mesai_gun.pazartesi:=FALSE;
+GVL_mesai_gun.sali:=FALSE;
+GVL_mesai_gun.carsamba:=FALSE;
+GVL_mesai_gun.persembe:=FALSE;
+GVL_mesai_gun.cumartesi:=FALSE;
+GVL_mesai_gun.cuma:=FALSE;
+
+
+END_IF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="mesai_saat" Id="{26c797ba-1eab-4dd7-8c5d-215e979778b4}">
+      <Implementation>
+        <ST><![CDATA[
+
+
+GVL_mesai_saat.a:=FALSE;
+GVL_mesai_saat.b:=FALSE;
+GVL_mesai_saat.c:=FALSE;
+
+
+
+
+ // Başlangıç Dakikası
+IF GVL_mesai_saat.kaydet=TRUE THEN
+	
+
+	 
+  
+	IF GVL_mesai_saat.x1bslangicSaat>GVL_mesai_saat.x1bitisSaat THEN
+	
+	GVL_mesai_saat.x1_mesaiSaat:=GVL_mesai_saat.x1bslangicSaat-GVL_mesai_saat.x1bitisSaat;
+	GVL_mesai_saat.a:=TRUE;
+	ELSE
+		
+	GVL_mesai_saat.x1_mesaiSaat:=GVL_mesai_saat.x1bitisSaat-GVL_mesai_saat.x1bslangicSaat;
+	GVL_mesai_saat.b:=TRUE;
+	
+	END_IF
+ 
+
+
+
+	IF GVL_mesai_saat.x1_5bslangicSaat>GVL_mesai_saat.x1_5bitisSaat THEN
+	
+	GVL_mesai_saat.x1_5mesaiSaat:=(GVL_mesai_saat.x1_5bslangicSaat-GVL_mesai_saat.x1_5bitisSaat)*1.5;
+	GVL_mesai_saat.c:=TRUE;
+	
+	ELSE
+		
+	
+	GVL_mesai_saat.x1_5mesaiSaat := (GVL_mesai_saat.x1_5bitisSaat-GVL_mesai_saat.x1_5bslangicSaat)*1.5;
+	GVL_mesai_saat.d:=TRUE;
+	
+	END_IF
+
+
+	
+     
+	 
+
+
+
+
+	IF GVL_mesai_saat.x3bslangicSaat>GVL_mesai_saat.x3bitisSaat THEN
+	
+	GVL_mesai_saat.x_3mesaiSaat:=(GVL_mesai_saat.x3bslangicSaat-GVL_mesai_saat.x3bitisSaat)*3;
+	GVL_mesai_saat.e:=TRUE;
+	ELSE
+		
+	GVL_mesai_saat.x_3mesaiSaat:=(GVL_mesai_saat.x3bitisSaat-GVL_mesai_saat.x3bslangicSaat)*3;
+	GVL_mesai_saat.f:=TRUE;
+	
+	END_IF
+	
+	
+	
+	
+	
+	IF GVL_mesai_saat.a=TRUE  OR GVL_mesai_saat.b=TRUE  THEN
+		GVL_mesai_saat.mesaiSaaat:=GVL_mesai_saat.x1_mesaiSaat;
+		
+	END_IF
+	
+	
+	
+	(* IF GVL_mesai_saat.c=TRUE  OR GVL_mesai_saat.d=TRUE  THEN
+		
+		GVL_mesai_saat.mesaiSaaat:=GVL_mesai_saat.x1_5mesaiSaat;
+	END_IF
+	
+	IF GVL_mesai_saat.e=TRUE OR GVL_mesai_saat.f=TRUE THEN
+		
+		GVL_mesai_saat.mesaiSaaat:=GVL_mesai_saat.x_3mesaiSaat;
+	END_IF *)
+	
+	GVL_mesai_saat.tum_mesai:=(GVL_mesai_saat.x1_mesaiSaat+GVL_mesai_saat.x1_5mesaiSaat+GVL_mesai_saat.x_3mesaiSaat);
+ 
+	
+	
+	
+
+
+END_IF
+
+
+ 
+
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="Mesai_Ucret_Panel" Id="{90767ff7-2000-4461-b0f5-8590c5c2ea1a}">
+      <Implementation>
+        <ST><![CDATA[
+
+
+GVL_Mesai_Ucret.online:=TRUE;
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="uyelik_panel" Id="{37d547a8-df21-4636-91aa-1f574a517ccc}">
+      <Implementation>
+        <ST><![CDATA[
+
+saydir(CLK:=kaydet , Q=>cikis );
+		
+		
+
+IF kaydet=TRUE THEN
+
+
+
+
+IF cikis=TRUE THEN
+	sayici:=sayici+1;
+END_IF
+
+	FOR i:=1 TO 70 BY 1 DO
+	
+		IF isim[i]='' THEN			
+			isim[i]:=ad;
+		ELSE
+			isim[sayici]:=ad;
+		END_IF
+		
+		EXIT;
+		
+	END_FOR
+
+
+
+IF cikis=TRUE THEN
+	sayici1:=sayici1+1;
+END_IF
+
+
+
+FOR j:=1 TO 70 BY 1 DO
+	
+  IF soyisim[j]='' THEN
+	  soyisim[j]:=soyad;
+   ELSE
+	soyisim[sayici1]:=soyad;
+  END_IF
+
+
+EXIT;
+END_FOR
+
+
+
+
+
+
+
+
+
+
+IF cikis=TRUE THEN
+	sayici2:=sayici2+1;
+	END_IF
+
+
+
+FOR g:=1 TO 70 BY 1 DO
+	
+  IF kullanici[g]='' THEN
+	  kullanici[g]:=yenikul;
+	  ELSE
+		  kullanici[sayici2]:=yenikul;
+  END_IF
+
+
+EXIT;
+END_FOR
+
+
+
+
+
+
+
+IF cikis=TRUE THEN
+	sayici3:=sayici3+1;
+	END_IF
+
+
+
+FOR h:=1 TO 70 BY 1 DO
+	
+  IF sifreler[h]='' THEN
+	  sifreler[h]:=yenisifre;
+	  ELSE
+		  sifreler[sayici3]:=yenisifre;
+  END_IF
+
+
+EXIT;
+END_FOR
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+END_IF
+
+	
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="MAIN">
+      <LineId Id="155" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="295" Count="0" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="301" Count="0" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="297" Count="0" />
+      <LineId Id="296" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="303" Count="0" />
+      <LineId Id="388" Count="0" />
+      <LineId Id="460" Count="1" />
+      <LineId Id="307" Count="0" />
+      <LineId Id="306" Count="0" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="147" Count="1" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="46" Count="3" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Giris_Panel">
+      <LineId Id="48" Count="1" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Hesap_Panel">
+      <LineId Id="2" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="84" Count="4" />
+      <LineId Id="93" Count="7" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="67" Count="6" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="81" Count="2" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="12" Count="7" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="4" Count="6" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Kayit_sayfa">
+      <LineId Id="17" Count="4" />
+      <LineId Id="167" Count="1" />
+      <LineId Id="165" Count="1" />
+      <LineId Id="171" Count="1" />
+      <LineId Id="2" Count="1" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="163" Count="1" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="152" Count="10" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="108" Count="1" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="69" Count="3" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="103" Count="2" />
+      <LineId Id="101" Count="1" />
+      <LineId Id="99" Count="1" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="110" Count="3" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="116" Count="1" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="114" Count="1" />
+      <LineId Id="73" Count="14" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="174" Count="4" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="179" Count="9" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.mesai_gun">
+      <LineId Id="2" Count="5" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="4" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="24" Count="17" />
+      <LineId Id="43" Count="4" />
+      <LineId Id="73" Count="10" />
+      <LineId Id="49" Count="4" />
+      <LineId Id="84" Count="10" />
+      <LineId Id="54" Count="4" />
+      <LineId Id="95" Count="29" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="126" Count="10" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="60" Count="12" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.mesai_saat">
+      <LineId Id="9" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="439" Count="1" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="303" Count="1" />
+      <LineId Id="306" Count="1" />
+      <LineId Id="394" Count="1" />
+      <LineId Id="401" Count="0" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="405" Count="2" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="408" Count="0" />
+      <LineId Id="400" Count="0" />
+      <LineId Id="410" Count="3" />
+      <LineId Id="415" Count="2" />
+      <LineId Id="458" Count="0" />
+      <LineId Id="443" Count="0" />
+      <LineId Id="418" Count="3" />
+      <LineId Id="459" Count="1" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="423" Count="0" />
+      <LineId Id="485" Count="0" />
+      <LineId Id="424" Count="1" />
+      <LineId Id="486" Count="0" />
+      <LineId Id="426" Count="6" />
+      <LineId Id="471" Count="0" />
+      <LineId Id="433" Count="2" />
+      <LineId Id="472" Count="0" />
+      <LineId Id="436" Count="0" />
+      <LineId Id="422" Count="0" />
+      <LineId Id="444" Count="3" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="455" Count="1" />
+      <LineId Id="454" Count="0" />
+      <LineId Id="465" Count="0" />
+      <LineId Id="463" Count="0" />
+      <LineId Id="466" Count="1" />
+      <LineId Id="470" Count="0" />
+      <LineId Id="468" Count="1" />
+      <LineId Id="473" Count="1" />
+      <LineId Id="477" Count="0" />
+      <LineId Id="475" Count="1" />
+      <LineId Id="487" Count="1" />
+      <LineId Id="449" Count="3" />
+      <LineId Id="404" Count="0" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="390" Count="0" />
+      <LineId Id="478" Count="1" />
+      <LineId Id="391" Count="0" />
+      <LineId Id="483" Count="0" />
+      <LineId Id="308" Count="0" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="392" Count="0" />
+      <LineId Id="309" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="481" Count="1" />
+      <LineId Id="30" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Mesai_Ucret_Panel">
+      <LineId Id="3" Count="2" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.uyelik_panel">
+      <LineId Id="86" Count="1" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="241" Count="1" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="203" Count="2" />
+      <LineId Id="232" Count="1" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="209" Count="3" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="215" Count="2" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="247" Count="8" />
+      <LineId Id="273" Count="16" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="291" Count="3" />
+      <LineId Id="297" Count="1" />
+      <LineId Id="304" Count="16" />
+      <LineId Id="299" Count="4" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="180" Count="1" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="190" Count="7" />
+      <LineId Id="188" Count="1" />
+      <LineId Id="182" Count="1" />
+      <LineId Id="227" Count="1" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="12" Count="2" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

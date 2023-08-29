@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_Mesai_Ucret" Id="{fa8950f8-3849-4fcd-be9b-6016239eb1b1}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+
+hesapla:INT;
+mesaiUcret:INT;
+online:BOOL;
+kaydet:BOOL;
+
+
+
+
+
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

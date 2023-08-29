@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_mesai_gun" Id="{44b669c5-4e93-42b3-b2b5-69fdc3272d98}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+pazartesi:BOOL;
+sali:BOOL;
+carsamba:BOOL;
+persembe:BOOL;
+cuma:BOOL;
+cumartesi:BOOL;
+pazar:BOOL;
+kaydet:BOOL;
+
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

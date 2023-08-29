@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_hesapSayfa" Id="{52eaa716-6ffe-4a01-8201-f9ad22cdb3b3}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+
+saydir1: TON;
+start:BOOL;
+cikis:BOOL;
+gecensure:TIME;
+gecenzaman:INT;
+hesaplama:INT;
+
+
+
+
+
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
